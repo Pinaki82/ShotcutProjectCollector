@@ -178,6 +178,7 @@ int parse_project_file(const char *filename, char ***resources, size_t *count) {
   *count = 0;
   char line[MAX_LINE_LENGTH];
   int inside_chain_or_producer = 0; // Tracks whether we're inside <chain> or <producer>
+  int inside_transition = 0; // Tracks whether we're inside <transition>
 
   while(fgets(line, sizeof(line), file)) {
     // Check for the start of a <chain> or <producer>
@@ -191,6 +192,47 @@ int parse_project_file(const char *filename, char ***resources, size_t *count) {
 
     // Extract resource paths within <chain> or <producer>
     if(inside_chain_or_producer && strstr(line, "<property name=\"resource\">")) {
+      char *start = strchr(line, '>') + 1;
+      char *end = strrchr(line, '<');
+
+      if(start && end) {
+        size_t len = end - start;
+        char *resource = malloc(len + 1);
+
+        if(!resource) {
+          fclose(file);
+          free_strings_array(*resources, *count);
+          return 0;
+        }
+
+        strncpy(resource, start, len);
+        resource[len] = '\0';
+        // Add to resources array
+        *resources = realloc(*resources, (*count + 1) * sizeof(char *));
+
+        if(!*resources) {
+          fclose(file);
+          free_strings_array(*resources, *count);
+          free(resource);
+          return 0;
+        }
+
+        (*resources)[*count] = resource;
+        (*count)++;
+      }
+    }
+
+    // Check for the start of a <transition>
+    else if(strstr(line, "<transition")) {
+      inside_transition = 1;
+    }
+
+    else if(inside_transition && strstr(line, "</transition>")) {
+      inside_transition = 0;
+    }
+
+    // Extract resource paths within <transition>
+    else if(inside_transition && strstr(line, "<property name=\"resource\">")) {
       char *start = strchr(line, '>') + 1;
       char *end = strrchr(line, '<');
 

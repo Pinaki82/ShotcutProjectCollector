@@ -224,7 +224,7 @@ void detect_and_prepare_cousins(char **resources, size_t resource_count, const c
     return;
   }
 
-  for(size_t i = 0; i < resource_count; ++i) {
+  for(size_t i = 0; i < resource_count; i++) {
     char *filename = strrchr(resources[i], '/');
 
     if(!filename) {
@@ -747,6 +747,38 @@ void process_file_stabilizer_line(char *line, const char *stabilizer_presets_dir
   }
 }
 
+void process_alpha_transition_line(char *line, const char *alpha_transition_dir, FILE *out, const char *proj_root) {
+  char *start = strchr(line, '>') + 1;
+  char *end = strrchr(line, '<');
+
+  if(start && end && start < end) {
+    size_t len = end - start;
+    char original_path[4096] = {0};
+    strncpy(original_path, start, len);
+    original_path[len] = '\0';
+
+    // Validate original_path
+    if(strlen(original_path) == 0 || original_path[0] == '\0') {
+      fprintf(stderr, "Error: Invalid alpha transition path in line: %s\n", line);
+      fputs(line, out); // Write the line as-is
+      return;
+    }
+
+    // Construct the new path in alpha_transition directory
+    const char *filename = strrchr(original_path, '/');
+    filename = filename ? filename + 1 : original_path;
+    char new_path[4096] = {0};
+    snprintf(new_path, sizeof(new_path) + BUFFER, "assets/alpha_transition/%s", filename);
+    // Copy the alpha transition file to the alpha transition directory
+    copy_file_to_directory(original_path, alpha_transition_dir, proj_root);
+    // Replace the original path with the new path in the line
+    str_replace_in_place(line, original_path, new_path);
+  }
+
+  // Write the modified or original line to the output file
+  fputs(line, out);
+}
+
 /*
   copy_and_modify_project_file - Copies an MLT project file with modified resource paths
   --------------------------------------------------------------------------------------
@@ -828,19 +860,31 @@ int copy_and_modify_project_file(const char *input, const char *output, const ch
   char line[4 * BUFFER]; // Max line length
   char *lut_dir = concat_paths(assets_dir, "LUT");
   char *stabilizer_dir = concat_paths(assets_dir, "stabilization_data");
+  char *alpha_transition_dir = concat_paths(assets_dir, "alpha_transition");
 
-  if(!lut_dir || !stabilizer_dir) {
+  if(!lut_dir || !stabilizer_dir || !alpha_transition_dir) {
     perror("Failed to allocate memory for subdirectories");
     fclose(in);
     fclose(out);
     free(lut_dir);
     free(stabilizer_dir);
+    free(alpha_transition_dir);
     return 0;
   }
 
+  int inside_transition = 0; // Track whether we're inside a <transition> block
+
   while(fgets(line, sizeof(line), in)) {
     if(strstr(line, "<property name=\"resource\">")) {
-      process_resource_line(line, assets_dir, out);
+      if(inside_transition) {
+        // Process the alpha transition line
+        process_alpha_transition_line(line, alpha_transition_dir, out, project_root);
+      }
+
+      else {
+        // Process regular resource line
+        process_resource_line(line, assets_dir, out);
+      }
     }
 
     else if(strstr(line, "<property name=\"av.file\">")) {
@@ -851,14 +895,27 @@ int copy_and_modify_project_file(const char *input, const char *output, const ch
       process_file_stabilizer_line(line, stabilizer_dir, out, project_root);
     }
 
+    else if(strstr(line, "<transition")) {
+      inside_transition = 1;
+      // Write the opening <transition> tag as-is
+      fputs(line, out);
+    }
+
+    else if(strstr(line, "</transition>")) {
+      inside_transition = 0;
+      // Write the closing </transition> tag as-is
+      fputs(line, out);
+    }
+
     else {
-      // Copy lines that don't need modification
+      // Copy lines that don't match any condition
       fputs(line, out);
     }
   }
 
   free(lut_dir);
   free(stabilizer_dir);
+  free(alpha_transition_dir);
   fclose(in);
   fclose(out);
   return 1;

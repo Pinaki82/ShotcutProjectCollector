@@ -35,6 +35,7 @@ void str_replace_in_place(char *line, const char *search, const char *replace);
 void process_resource_line(char *line, const char *assets_dir, FILE *out);
 void process_lut_line(char *line, const char *lut_dir, FILE *out, const char *proj_root);
 void process_file_stabilizer_line(char *line, const char *stabilizer_presets_dir, FILE *out, const char *proj_root);
+void process_alpha_transition_line(char *line, const char *alpha_transition_dir, FILE *out, const char *proj_root);
 int copy_and_modify_project_file(const char *input, const char *output, const char *assets_dir, const char *project_root);
 void free_file_mappings();
 

@@ -141,7 +141,6 @@ int main(int argc, char *argv[]) {
   /* Debugging statements */
   /*printf("DEBUG: Input directory: %s\n", input_dir);*/
   /*printf("DEBUG: Output directory: %s\n", output_dir);*/
-
   // Step 1: Check if input directory matches output directory
   if(strcmp(input_dir, output_dir) == 0) {
     fprintf(stderr, "Error: Input file's directory and output directory cannot be the same.\n");
@@ -151,11 +150,6 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  /*
-    else if(strcmp(input_dir, output_dir) != 0) {
-    printf("DEBUG: Input file's directory and output directory are different %s %s\n", input_dir, output_dir);
-    }
-  */
   free(input_dir); // Free the extracted input directory after the check
   // Step 2: Parse the project file to extract resources
   char **resources = NULL;
@@ -205,6 +199,18 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
+  char *alpha_transition_dir = concat_paths(assets_dir, "alpha_transition");
+
+  if(!create_directory(alpha_transition_dir)) {
+    fprintf(stderr, "Error: Failed to create alpha_transition directory.\n");
+    free_strings_array(resources, resource_count);
+    free(assets_dir);
+    free(lut3d_presets_dir);
+    free(stabilization_presets_dir);
+    free(alpha_transition_dir);
+    return EXIT_FAILURE;
+  }
+
   // Step 6: Copy assets to the output directory
   for(size_t i = 0; i < resource_count; ++i) {
     const char *destination = get_destination_path(resources[i], assets_dir);
@@ -237,7 +243,32 @@ int main(int argc, char *argv[]) {
   }
 
   // Step 7: Copy and modify the project file
-  char *output_project_file = concat_paths(output_dir, "project_collected.mlt");
+  // Project name should be the input project file's name
+  const char *input_filename = strrchr(input_file, '/');
+
+  if(!input_filename) {
+    input_filename = input_file;
+  }
+
+  else {
+    input_filename++;
+  }
+
+  // Ensure the output file has .mlt extension
+  char *output_project_file = concat_paths(output_dir, input_filename);
+
+  if(output_project_file) {
+    size_t len = strlen(output_project_file);
+
+    if(len < 4 || strcmp(output_project_file + len - 4, ".mlt") != 0) {
+      char *new_output = realloc(output_project_file, len + 5);
+
+      if(new_output) {
+        output_project_file = new_output;
+        strcat(output_project_file, ".mlt");
+      }
+    }
+  }
 
   if(!copy_and_modify_project_file(input_file, output_project_file, assets_dir, proj_root_dir_path)) {
     fprintf(stderr, "Error: Failed to copy and modify the project file.\n");
