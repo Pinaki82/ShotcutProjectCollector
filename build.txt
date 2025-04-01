@@ -1,0 +1,19 @@
+build:
+mkdir -p build && cd build
+cd build
+
+cmake ..
+or,
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+or,
+cmake -DCMAKE_BUILD_TYPE=Release ..
+
+make
+or,
+make config=Debug platform=Linux
+make config=Release platform=Linux
+
+
+./shotcut_project_collector '/mnt/hdd/Capture_Edit/Shotcut/ShotcutProjectCollector/test-proj-collection-blank.mlt' '/mnt/hdd/Capture_Edit/Shotcut/collection_test'
+or,
+gdb --args shotcut_project_collector '/mnt/hdd/Capture_Edit/Shotcut/ShotcutProjectCollector/test-proj-collection-blank.mlt' '/mnt/hdd/Capture_Edit/Shotcut/collection_test'

@@ -1,0 +1,9 @@
+project/
+├── src/
+│   ├── main.c
+│   ├── parser.c
+│   ├── parser.h
+│   ├── file_utils.c
+│   └── file_utils.h
+├── CMakeLists.txt
+└── README.md
