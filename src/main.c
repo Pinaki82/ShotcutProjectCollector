@@ -1,4 +1,7 @@
-// Last Change: 2025-04-02  Wednesday: 12:06:29 PM
+// Last Change: 2025-04-02  Wednesday: 01:29:06 PM
+#if !defined(__linux__)
+  #error "This program is currenly Linux-only"
+#endif
 /*
   Shotcut Project Collector
 

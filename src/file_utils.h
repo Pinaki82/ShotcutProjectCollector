@@ -1,6 +1,10 @@
-// Last Change: 2025-04-02  Wednesday: 12:32:10 PM
+// Last Change: 2025-04-02  Wednesday: 01:32:24 PM
 #ifndef FILE_UTILS_H
 #define FILE_UTILS_H
+
+#if !defined(__linux__)
+  #error "These functions declared in file_utils.h will work only on Linux"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
