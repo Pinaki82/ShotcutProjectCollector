@@ -107,8 +107,52 @@ The program includes robust error handling for:
 ### Important Notes
 
 - The input file's directory and output directory cannot be the same
+
 - The program will create all necessary directories if they don't exist
+
 - All file paths in the project file will be updated to use relative paths
+
+- **Ensure to check the final output project.** For instance, examine the following source and output examples:
+
+Source project:
+
+```xml
+    <filter id="filter18" out="00:00:06.480">
+      <property name="filter">shape</property>
+      <property name="mlt_service">mask_start</property>
+      <property name="shotcut:filter">maskFromFile</property>
+      <property name="filter.mix">50</property>
+      <property name="filter.softness">0</property>
+      <property name="filter.invert">0</property>
+      <property name="filter.use_luminance">0</property>
+      <property name="filter.resource">Mask-round.png</property>
+      <property name="filter.use_mix">0</property>
+      <property name="filter.audio_match">0</property>
+      <property name="filter.alpha_operation">overwrite</property>
+    </filter>
+```
+
+Output Project:
+
+```xml
+    <filter id="filter18" out="00:00:06.480">
+      <property name="filter">shape</property>
+      <property name="mlt_service">mask_start</property>
+      <property name="shotcut:filter">maskFromFile</property>
+      <property name="filter.mix">50</property>
+      <property name="filter.softness">0</property>
+      <property name="filter.invert">0</property>
+      <property name="filter.use_luminance">0</property>
+      <property name="filter.resource">Mask-round.png</property>
+      <property name="filter.use_mix">0</property>
+      <property name="filter.audio_match">0</property>
+      <property name="filter.alpha_operation">overwrite</property>
+    </filter>
+```
+
+In the output, the `<property name="filter.resource">Mask-round.png</property>` line did not change from the source as `<property name="filter.resource">assets/Mask-round.png</property>`. The corresponding file was not copied either. This issue was a small error within a complex project file that is 275.9 KiB in size.
+
+To resolve this, you may need to manually copy the necessary files and modify the project using the editor, or you could use a text editor to correct the few conflicting lines.
 
 ## Maintenance Tips
 
