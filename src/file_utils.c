@@ -1,4 +1,4 @@
-// Last Change: 2025-04-01  Tuesday: 01:21:24 AM
+// Last Change: 2025-04-02  Wednesday: 12:24:18 PM
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,8 +10,10 @@
 #include "logging.h"
 #include "parser.h"
 
+// ---- Suggested by Claude 3.7 Sonnet
 FileMapping *file_mappings = NULL; // Global array of file mappings
 size_t file_mapping_count = 0; // Global count of file mappings
+// ----
 
 /*
    ===  FUNCTION  ======================================================================
@@ -20,6 +22,7 @@ size_t file_mapping_count = 0; // Global count of file mappings
                  Each resource is processed to extract its filename, original path,
                  relative path, and cousin status.
                  Cousins are files with the same filename but different directory structures.
+                 Initially written by Claude Sonnet 3.7.  Rewritten by Qwen 2.5 Turbo (https://chat.qwen.ai/).
    =====================================================================================
 */
 void build_file_mappings(char **resources, size_t resource_count, const char *project_root) {
@@ -136,6 +139,7 @@ void build_file_mappings(char **resources, size_t resource_count, const char *pr
     Description:  Returns the destination path for a given source file.
                  If the file is a cousin, it uses the relative path.
                  Otherwise, it puts the file in the assets directory.
+                 Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
    =====================================================================================
 */
 const char *get_destination_path(const char *source, const char *assets_dir) {
@@ -171,6 +175,7 @@ const char *get_destination_path(const char *source, const char *assets_dir) {
    ===  FUNCTION  ======================================================================
            Name:  concat_paths
     Description:  Concatenates two paths to form a new path
+    Writte by Qwen 2.5 Turbo https://chat.qwen.ai/
    =====================================================================================
 */
 char *concat_paths(const char *path1, const char *path2) {
@@ -206,6 +211,7 @@ char *concat_paths(const char *path1, const char *path2) {
     Description:  Detects filenames with different directory structures and prepares
                  the necessary directory structures in the destination directory.
                  Unused function.
+                 Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
    =====================================================================================
 */
 void detect_and_prepare_cousins(char **resources, size_t resource_count, const char *assets_dir, const char *project_root) {
@@ -303,6 +309,7 @@ int create_directory(const char *path) {
            Name:  copy_file_to_directory
     Description:  Copies a file to a specified directory, handling both absolute and
                  relative paths by converting relative paths to absolute in-memory.
+                 Writtn by Qwen 2.5 Turbo (https://chat.qwen.ai/)
    =====================================================================================
 */
 void copy_file_to_directory(const char *source, const char *destination_dir, const char *project_root) {
@@ -471,6 +478,7 @@ void copy_file_to_directory_with_context(const char *source, const char *destina
    ===  FUNCTION  ======================================================================
            Name:  str_replace
     Description:  Replaces all occurrences of 'search' with 'replace' in 'src'
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
    =====================================================================================
 */
 char *str_replace(const char *src, const char *search, const char *replace) {
@@ -526,6 +534,7 @@ char *str_replace(const char *src, const char *search, const char *replace) {
    ===  FUNCTION  ======================================================================
            Name:  str_replace_in_place
     Description:  Replaces all occurrences of 'search' with 'replace' in 'line'
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
    =====================================================================================
 */
 void str_replace_in_place(char *line, const char *search, const char *replace) {
@@ -571,6 +580,7 @@ void str_replace_in_place(char *line, const char *search, const char *replace) {
            Name:  process_resource_line
     Description:  Processes a resource line by extracting the original path and validating it.
     Resource lines are XML tags that contain video, audio, and image file paths.
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
    =====================================================================================
 */
 void process_resource_line(char *line, const char *assets_dir, FILE *out) {
@@ -646,6 +656,7 @@ void process_resource_line(char *line, const char *assets_dir, FILE *out) {
            Name:  process_lut_line
     Description:  Processes a LUT line by extracting the original path and validating it.
     LUT lines are XML tags that contain LUT file paths.
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
    =====================================================================================
 */
 void process_lut_line(char *line, const char *lut_dir, FILE *out, const char *proj_root) {
@@ -699,6 +710,7 @@ void process_lut_line(char *line, const char *lut_dir, FILE *out, const char *pr
            Name:  process_file_stabilizer_line
     Description:  Processes a file stabilizer line by extracting the original path and validating it.
     File stabilizer lines are XML tags that contain the stabilization data file paths.
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
    =====================================================================================
 */
 void process_file_stabilizer_line(char *line, const char *stabilizer_presets_dir, FILE *out, const char *proj_root) {
@@ -747,6 +759,13 @@ void process_file_stabilizer_line(char *line, const char *stabilizer_presets_dir
   }
 }
 
+/*
+   ===  FUNCTION  ======================================================================
+           Name:  process_alpha_transition_line
+    Description:  Processes an alpha transition line by extracting the original path and validating it.
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
+   =====================================================================================
+*/
 void process_alpha_transition_line(char *line, const char *alpha_transition_dir, FILE *out, const char *proj_root) {
   char *start = strchr(line, '>') + 1;
   char *end = strrchr(line, '<');
@@ -784,7 +803,7 @@ void process_alpha_transition_line(char *line, const char *alpha_transition_dir,
   --------------------------------------------------------------------------------------
   Initially written by Qwen 2.5 Turbo.
   Claude Sonnet 3.7. 2025.03.26. IST 01:02 PM.
-  Rewritten several times by Qwen 2.5 Turbo.
+  Rewritten several times by Qwen 2.5 Turbo (https://chat.qwen.ai/).
 
   PURPOSE:
   This function reads through an MLT project file line by line, modifying and copying
@@ -921,6 +940,14 @@ int copy_and_modify_project_file(const char *input, const char *output, const ch
   return 1;
 }
 
+
+/*
+   ===  FUNCTION  ======================================================================
+           Name:  free_file_mappings
+    Description:  Frees memory allocated for file mappings
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
+   =====================================================================================
+*/
 void free_file_mappings() {
   if(!file_mappings) {
     return;

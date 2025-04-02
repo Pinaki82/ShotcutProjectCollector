@@ -1,4 +1,4 @@
-// Last Change: 2025-04-01  Tuesday: 01:12:55 AM
+// Last Change: 2025-04-02  Wednesday: 12:06:29 PM
 /*
   Shotcut Project Collector
 
@@ -69,6 +69,13 @@
 
 const char *proj_root_dir_path;
 
+/*
+   ===  FUNCTION  ======================================================================
+           Name:  main
+    Description:  The main function of the program.
+    Written by:  Qwen 2.5 Turbo https://chat.qwen.ai/
+   =====================================================================================
+*/
 int main(int argc, char *argv[]) {
   // Check for correct number of arguments
   if(argc != 3) {

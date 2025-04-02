@@ -1,4 +1,4 @@
-// Last Change: 2025-04-01  Tuesday: 01:23:34 AM
+// Last Change: 2025-04-02  Wednesday: 12:32:10 PM
 #ifndef FILE_UTILS_H
 #define FILE_UTILS_H
 
@@ -8,7 +8,10 @@
 
 #define  BUFFER  2048
 
-// Add to a header file
+/*
+   Struct to hold file mappings
+   Written by Claude 3.7 Sonnet
+*/
 typedef struct {
   char *filename;       // Just the filename
   char *original_path;  // Full original path
@@ -18,8 +21,8 @@ typedef struct {
 
 extern FileMapping *file_mappings;
 extern size_t file_mapping_count;
+// --- Claude 3.7 Sonnet
 
-// Function declarations
 void build_file_mappings(char **resources, size_t resource_count, const char *project_root);
 char *concat_paths(const char *path1, const char *path2);
 const char *get_destination_path(const char *source, const char *assets_dir);

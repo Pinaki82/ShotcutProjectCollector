@@ -1,4 +1,4 @@
-// Last Change: 2025-04-01  Tuesday: 01:28:19 AM
+// Last Change: 2025-04-02  Wednesday: 12:29:27 PM
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,6 +11,13 @@
 // Global log file pointer
 FILE *log_file = NULL;
 
+/*
+   ===  FUNCTION  ======================================================================
+           Name:  init_logging
+    Description:  Initializes logging by opening a file for writing
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
+   =====================================================================================
+*/
 void init_logging(const char *output_dir) {
   char *log_path = concat_paths(output_dir, "project_collector.log");
 
@@ -31,6 +38,13 @@ void init_logging(const char *output_dir) {
   free(log_path);
 }
 
+/*
+   ===  FUNCTION  ======================================================================
+           Name:  log_message
+    Description:  Writes a message to the log file
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
+   =====================================================================================
+*/
 void log_message(const char *format, ...) {
   if(log_file) {
     va_list args;

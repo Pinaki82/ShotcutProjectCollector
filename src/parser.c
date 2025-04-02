@@ -1,4 +1,4 @@
-// Last Change: 2025-03-27  Thursday: 08:54:23 PM
+// Last Change: 2025-04-02  Wednesday: 12:27:42 PM
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -165,6 +165,14 @@ char **remove_duplicates_and_sort(char **lines, size_t *count) {
 }
 // ----------------- Grok 3 snippet
 
+
+/*
+   ===  FUNCTION  ======================================================================
+           Name:  parse_project_file
+    Description:  Parse a project file and return a list of resources
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
+   =====================================================================================
+*/
 int parse_project_file(const char *filename, char ***resources, size_t *count) {
   /*printf("DEBUG: fn parse_project_file, parser.c, received filename: %s\n", filename);*/
   FILE *file = fopen(filename, "r");
@@ -271,6 +279,13 @@ int parse_project_file(const char *filename, char ***resources, size_t *count) {
   return 1;
 }
 
+/*
+   ===  FUNCTION  ======================================================================
+           Name:  free_strings_array
+    Description:  Frees memory allocated for an array of strings
+    Written by Qwen 2.5 Turbo (https://chat.qwen.ai/)
+   =====================================================================================
+*/
 void free_strings_array(char **array, size_t count) {
   if(!array) {
     return;
