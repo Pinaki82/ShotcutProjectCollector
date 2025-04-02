@@ -4,6 +4,10 @@
 
 This program helps organise MLT (Shotcut) project files by collecting all their dependencies into a single, organised structure. Think of it as a tool that makes your video projects more portable and easier to manage.
 
+## Platform Support
+
+This program is currently Linux-only. Windows support is planned for future releases. The primary reason for this limitation is the significant differences in file and directory handling between Linux and Windows operating systems. While the core functionality is platform-independent, the lack of necessary cross-platform `functions()` to handle these differences has led to the current Linux-only implementation.
+
 ## What This Program Does
 
 Imagine you have a video project with lots of files scattered all over your computer:
